@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace BeerSender.Domain
 {
-    internal class AggregateRoot
+    public class AggregateRoot
     {
+        public void Apply(object? @event)
+        {
+
+        }
     }
 }
