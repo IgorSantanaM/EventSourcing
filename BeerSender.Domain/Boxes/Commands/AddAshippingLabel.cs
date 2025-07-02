@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace BeerSender.Domain.Boxes.Commands;
- public record AddShippingLabel(
-        Guid BoxId,
-        ShippingLabel Label);
+
+public record AddShippingLabel(
+    Guid BoxId,
+    ShippingLabel Label);
 
 public class AddShippingLabelHandler(IEventStore eventStore)
     : CommandHandler<AddShippingLabel>(eventStore)
@@ -23,7 +18,17 @@ public class AddShippingLabelHandler(IEventStore eventStore)
         }
         else
         {
-            boxStream.Append(new ShippingLabelFailedToAdd(ShippingLabelFailedToAdd.FailReason.TrackingCodeInvalid));
-        }        
+            boxStream.Append(new FailedToAddShippingLabel(
+                FailedToAddShippingLabel.FailReason.TrackingCodeInvalid));
+        }
     }
 }
+
+
+
+
+
+
+
+
+
