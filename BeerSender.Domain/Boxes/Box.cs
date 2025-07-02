@@ -20,16 +20,6 @@ namespace BeerSender.Domain.Boxes
         public ShippingLabel? ShippingLabel { get; private set; }
     }
 
-    public record CreateBox(
-    Guid BoxId,
-    int DesiredNumberOfSpots
-    );
-
-    public record AddShippingLabel(
-        Guid BoxId,
-        string TrackingCode,
-        Carrier Carrier);
-
     public record BoxCreated(
     BoxCapacity Capacity
     );
@@ -54,7 +44,7 @@ namespace BeerSender.Domain.Boxes
 
     public record ShippingLabel(Carrier Carrier, string TrackingCode)
     {
-        private bool IsValid()
+        public bool IsValid()
         {
             return Carrier switch
             { 
