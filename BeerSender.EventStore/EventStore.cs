@@ -3,7 +3,9 @@ using Dapper;
 
 namespace BeerSender.EventStore;
 
-public class EventStore(EventStoreConnectionFactory DbConnectionFactory) 
+public class EventStore(
+    INotificationService notification,
+    EventStoreConnectionFactory DbConnectionFactory) 
     : IEventStore
 {
     public IEnumerable<StoredEvent> GetEvents(Guid aggregateId)
@@ -46,6 +48,11 @@ public class EventStore(EventStoreConnectionFactory DbConnectionFactory)
             transaction);
 
         transaction.Commit();
+
+        foreach(var storedEvent  in _newEvents)
+        {
+            notification.PublishEvent(storedEvent.AggreagateId, storedEvent.EventData);
+        }
         _newEvents.Clear();
     }
 }
