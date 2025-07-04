@@ -1,10 +1,62 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "New Beer Box";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container row g-3">
+    <h1 class="display-1">New Beer Box</h1>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <h2 class="h2">Create</h2>
+            <div class="row mb-3">
+                <label for="package_id_input" class="form-label">Box ID</label>
+                <input type="text" class="form-control" id="package_id_input" disabled aria-describedby="package_id_help">
+                <div id="package_id_help" class="form-text">This gets auto-generated when the page loads.</div>
+            </div>
+            <div class="row mb-3">
+                <label for="package_capacity_input" class="form-label">Desired Capacity</label>
+                <input type="number" class="form-control col-md-4" id="package_capacity_input" value="12" min="1" max="24">
+            </div>
+            <div class="row mb-3">
+                <input type="button" class="btn btn-primary col-md-4" id="createPackage" value="Create Package"/>
+            </div>
+            <div class="col-6">
+                <hr class="mb-6"/>
+            </div>
+            <h2 class="h2">Add Label</h2>
+            <fieldset class="mb-3">
+                <legend>Carrier</legend>
+                <div class="form-check">
+                    <input type="radio" checked name="label_carrier_input" value="0"  class="form-check-input" id="label_carrier_input0">
+                    <label class="form-check-label" for="label_carrier_input0">UPS</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="label_carrier_input" value="1" class="form-check-input" id="label_carrier_input1">
+                    <label class="form-check-label" for="label_carrier_input1">FedEx</label>
+                </div>
+                <div class="form-check mb-3">
+                    <input type="radio" name="label_carrier_input" value="2"  class="form-check-input" id="label_carrier_input2">
+                    <label class="form-check-label" for="label_carrier_input2">BPost</label>
+                </div>
+            </fieldset>
+            <div class="row mb-3">
+                <label for="label_code_input" class="form-label">Tracking Code</label>
+                <input type="text" class="form-control" id="label_code_input">
+            </div>
+            <div class="row mb-3">
+                <input type="button" class="btn btn-primary col-md-4" id="addLabel" value="Add Label"/>
+            </div>
+            <div class="col-6">
+                <hr class="mb-6"/>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="h2">Events</h2>
+            <ul id="eventList"></ul>
+        </div>
+    </div>
 </div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/beerbox.js"></script>
+
