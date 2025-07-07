@@ -7,11 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerSender.Domain", "BeerSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerSender.Domain.Tests", "BeerSender.Domain.Tests\BeerSender.Domain.Tests.csproj", "{09889F8D-FCC3-4AD4-87A9-216E426A1096}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerSender.EventStore", "BeerSender.EventStore\BeerSender.EventStore.csproj", "{94234D0E-D5A5-B93C-ACFA-3F1979F762D5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerSender.Web", "BeerSender.Web\BeerSender.Web.csproj", "{0A397966-3555-221E-E6E5-D840FA33F350}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerSender.Projections", "BeerSender.Projections\BeerSender.Projections.csproj", "{6D526ADF-8366-E746-E443-810BD3D24B76}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerSender.QueryAPI", "BeerSender.QueryAPI\BeerSender.QueryAPI.csproj", "{AF05471A-AB11-C34B-24F3-08F3B6893E23}"
 EndProject
@@ -29,18 +25,10 @@ Global
 		{09889F8D-FCC3-4AD4-87A9-216E426A1096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09889F8D-FCC3-4AD4-87A9-216E426A1096}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09889F8D-FCC3-4AD4-87A9-216E426A1096}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94234D0E-D5A5-B93C-ACFA-3F1979F762D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94234D0E-D5A5-B93C-ACFA-3F1979F762D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94234D0E-D5A5-B93C-ACFA-3F1979F762D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94234D0E-D5A5-B93C-ACFA-3F1979F762D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0A397966-3555-221E-E6E5-D840FA33F350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A397966-3555-221E-E6E5-D840FA33F350}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A397966-3555-221E-E6E5-D840FA33F350}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A397966-3555-221E-E6E5-D840FA33F350}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D526ADF-8366-E746-E443-810BD3D24B76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D526ADF-8366-E746-E443-810BD3D24B76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D526ADF-8366-E746-E443-810BD3D24B76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D526ADF-8366-E746-E443-810BD3D24B76}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF05471A-AB11-C34B-24F3-08F3B6893E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF05471A-AB11-C34B-24F3-08F3B6893E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF05471A-AB11-C34B-24F3-08F3B6893E23}.Release|Any CPU.ActiveCfg = Release|Any CPU

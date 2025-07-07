@@ -15,7 +15,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BeerSender.Domain\BeerSender.Domain.csproj" />
-      <ProjectReference Include="..\BeerSender.EventStore\BeerSender.EventStore.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,19 +1,25 @@
 using BeerSender.Domain;
-using BeerSender.EventStore;
-using BeerSender.QueryAPI.Database;
+using Marten;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-builder.Services.RegisterDomain();
-builder.Services.RegisterEventStore();
-builder.Services.RegisterReadDatabase();
+
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddMarten(options =>
+{
+    options.Connection(builder.Configuration.GetConnectionString("Marten")!);
+    options.ApplyDomainConfig();
+    options.AddProjections();
+});
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
     app.UseSwaggerUI(opt => opt.SwaggerEndpoint("/openapi/v1.json", "BeerSender QueryAPI"));
 }
 
