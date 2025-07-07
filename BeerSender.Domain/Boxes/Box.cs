@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BeerSender.Domain.Boxes
 {
-    public class Box : AggregateRoot
+    public class Box
     {
         public Guid Id { get; set; }
         public List<BeerBottle> BeerBottles { get; } = [];
