@@ -4,48 +4,24 @@ using BeerSender.Domain.Boxes.Commands;
 namespace BeerSender.Domain.Tests.Boxes
 {
 
-    public abstract class BoxTest<TCommand> : CommandHandlerTest<TCommand>
+    public class AddBeerHandlerTest(MartenFixture fixture) : BoxTest<AddBeerBottle>(fixture)
     {
-        protected Guid Box_Id => _aggregateId;
-
-        // Events
-        protected BoxCreated Box_created_with_capacity(int capacity)
-        {
-            return new BoxCreated(new BoxCapacity(capacity));
-        }
-
-        protected BeerBottleAdded Beer_bottle_added(BeerBottle bottle)
-        {
-            return new BeerBottleAdded(bottle);
-        } 
-
-        //Test Data
-        protected BeerBottle carte_blanche = new(
-                    "Wolf ",
-                    "Carte Blanche",
-                    8.5,
-                    BeerType.Triple);
-    }
-
-    public class AddBeerHandlerTest : BoxTest<AddBeerBottle>
-    {
-        protected override CommandHandler<AddBeerBottle> Handler => new AddBeerBottleHandler(eventStore);
+        protected override ICommandHandler<AddBeerBottle> Handler => new AddBeerBottleHandler(Store);
 
         [Fact]
-        public void IfBoxIsEmpty_ThenBottleShouldBeAdded()
+        public async Task IfBoxIsEmpty_ThenBottleShouldBeAdded()
         {
+            await Given<Box>(
+               Box_created_with_capacity(6)
+               );
 
-            Given(
-                Box_created_with_capacity(6)
-                );
-
-            When(
+            await When(
                 Add_beer_bottle(carte_blanche)
                 );
 
-            Then(
-                Beer_bottle_added(carte_blanche)
-                );
+            await Then(
+                 Beer_bottle_added(carte_blanche)
+                 );
         }
 
         // Commands 
