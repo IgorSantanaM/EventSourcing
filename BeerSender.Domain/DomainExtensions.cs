@@ -14,11 +14,11 @@ namespace BeerSender.Domain
         {
             services.AddScoped<CommandRouter>();
 
-            services.AddTransient<CommandHandler<CreateBox>, CreateBoxHandler>();
-            services.AddTransient<CommandHandler<AddShippingLabel>, AddShippingLabelHandler>();
-            services.AddTransient<CommandHandler<AddBeerBottle>, AddBeerBottleHandler>();
-            services.AddTransient<CommandHandler<CloseBox>, CloseBoxHandler>();
-            services.AddTransient<CommandHandler<SendBox>, SendBoxHandler>();
+            services.AddTransient<ICommandHandler<CreateBox>, CreateBoxHandler>();
+            services.AddTransient<ICommandHandler<AddShippingLabel>, AddShippingLabelHandler>();
+            services.AddTransient<ICommandHandler<AddBeerBottle>, AddBeerBottleHandler>();
+            services.AddTransient<ICommandHandler<CloseBox>, CloseBoxHandler>();
+            services.AddTransient<ICommandHandler<SendBox>, SendBoxHandler>();
         }
     }
 }

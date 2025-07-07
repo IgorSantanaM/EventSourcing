@@ -1,26 +1,30 @@
+using Marten;
+
 namespace BeerSender.Domain.Boxes.Commands;
 
 public record AddShippingLabel(
     Guid BoxId,
     ShippingLabel Label);
 
-public class AddShippingLabelHandler(IEventStore eventStore)
-    : CommandHandler<AddShippingLabel>(eventStore)
+public class AddShippingLabelHandler(IDocumentStore store)
+    : ICommandHandler<AddShippingLabel>
 {
-    public override void Handle(AddShippingLabel command)
+    public async Task Handle(AddShippingLabel command)
     {
-        var boxStream = GetStream<Box>(command.BoxId);
-        var box = boxStream.GetEntity();
+        await using var session = store.IdentitySession();
+        var box = session.Events.AggregateStreamAsync<Box>(command.BoxId);
 
         if (command.Label.IsValid())
         {
-            boxStream.Append(new ShippingLabelAdded(command.Label));
+            session.Events.Append(command.BoxId, new ShippingLabelAdded(command.Label));
         }
         else
         {
-            boxStream.Append(new FailedToAddShippingLabel(
+            session.Events.Append(command.BoxId, new FailedToAddShippingLabel(
                 FailedToAddShippingLabel.FailReason.TrackingCodeInvalid));
         }
+
+        await session.SaveChangesAsync();
     }
 }
 
