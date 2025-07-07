@@ -8,6 +8,7 @@ namespace BeerSender.Domain.Boxes
 {
     public class Box : AggregateRoot
     {
+        public Guid Id { get; set; }
         public List<BeerBottle> BeerBottles { get; } = [];
         public BoxCapacity? Capacity { get; private set; }
         public ShippingLabel? ShippingLabel { get; private set; }

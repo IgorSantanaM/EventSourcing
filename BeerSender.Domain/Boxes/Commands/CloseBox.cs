@@ -1,3 +1,6 @@
+using Marten;
+using System.Runtime.InteropServices;
+
 namespace BeerSender.Domain.Boxes.Commands;
 
 public record CloseBox
@@ -5,22 +8,23 @@ public record CloseBox
     Guid BoxId
 );
 
-public class CloseBoxHandler(IEventStore eventStore)
-    : CommandHandler<CloseBox>(eventStore)
+public class CloseBoxHandler(IDocumentStore store)
+    : ICommandHandler<CloseBox>
 {
-    public override void Handle(CloseBox command)
+    public async Task Handle(CloseBox command)
     {
-        var boxStream = GetStream<Box>(command.BoxId);
-        var box = boxStream.GetEntity();
+        await using var session = store.IdentitySession();
+        var box = await session.Events.AggregateStreamAsync<Box>(command.BoxId);
 
-
-        if (box.BeerBottles.Any())
+        if (box!.BeerBottles.Any())
         {
-            boxStream.Append(new BoxClosed());
+            session.Events.Append(command.BoxId, new BoxClosed());
         }
         else
         {
-            boxStream.Append(new FailedToCloseBox(FailedToCloseBox.FailReason.BoxWasEmpty));
+            session.Events.Append(command.BoxId, new FailedToCloseBox(FailedToCloseBox.FailReason.BoxWasEmpty));
         }
+
+        await session.SaveChangesAsync();
     }
 }

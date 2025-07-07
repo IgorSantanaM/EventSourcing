@@ -1,6 +1,7 @@
 using BeerSender.Domain;
 using BeerSender.EventStore;
 using BeerSender.Web.EventPublishing;
+using Marten;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,12 @@ builder.Services.AddSignalR();
 builder.Services.RegisterEventStore();
 
 builder.Services.AddTransient<INotificationService, NotificationService>();
+
+builder.Services.AddMarten(opt =>
+{
+    opt.Connection
+    (builder.Configuration.GetConnectionString("Marten")!);
+});
 
 var app = builder.Build();
 

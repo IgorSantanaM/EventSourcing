@@ -1,3 +1,5 @@
+using Marten;
+
 namespace BeerSender.Domain.Boxes.Commands;
 
 public record CreateBox(
@@ -5,15 +7,17 @@ public record CreateBox(
     int DesiredNumberOfSpots 
 );
 
-public class CreateBoxHandler(IEventStore eventStore)
-    : CommandHandler<CreateBox>(eventStore)
+public class CreateBoxHandler(IDocumentStore store)
+    : ICommandHandler<CreateBox>
 {
-    public override void Handle(CreateBox command)
+    public async Task Handle(CreateBox command)
     {
-        var boxStream = GetStream<Box>(command.BoxId);
-        var box = boxStream.GetEntity();
-        
+        await using var session = store.IdentitySession();
+
         var capacity = BoxCapacity.Create(command.DesiredNumberOfSpots);
-        boxStream.Append(new BoxCreated(capacity));
+
+        session.Events.StartStream<Box>(command.BoxId, new BoxCreated(capacity));
+
+        await session.SaveChangesAsync();
     }
 }

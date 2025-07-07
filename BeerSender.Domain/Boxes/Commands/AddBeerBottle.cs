@@ -1,3 +1,5 @@
+using Marten;
+
 namespace BeerSender.Domain.Boxes.Commands;
 
 public record AddBeerBottle
@@ -6,22 +8,24 @@ public record AddBeerBottle
     BeerBottle BeerBottle
 );
 
-public class AddBeerBottleHandler(IEventStore eventStore)
-    : CommandHandler<AddBeerBottle>(eventStore)
+public class AddBeerBottleHandler(IDocumentStore store)
+    : ICommandHandler<AddBeerBottle>
 {
-    public override void Handle(AddBeerBottle command)
+    public async Task Handle(AddBeerBottle command)
     {
-        var boxStream = GetStream<Box>(command.BoxId);
-        var box = boxStream.GetEntity();
+        await using var session = store.IdentitySession();
 
-        if (box.IsFull)
+        var box = await session.Events.AggregateStreamAsync<Box>(command.BoxId);
+
+        if (box!.IsFull)
         {
-            boxStream.Append(new FailedToAddBeerBottle(FailedToAddBeerBottle.FailReason.BoxWasFull));
+            session.Events.Append(command.BoxId, new FailedToAddBeerBottle(FailedToAddBeerBottle.FailReason.BoxWasFull));
         }
         else
         {
-            boxStream.Append(new BeerBottleAdded(command.BeerBottle));
+            session.Events.Append(command.BoxId, new BeerBottleAdded(command.BeerBottle));
         }
-    }
 
+        await session.SaveChangesAsync();
+    }
 }
