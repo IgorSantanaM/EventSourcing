@@ -17,7 +17,7 @@ public abstract class CommandHandlerTest<TCommand>
     /// The command handler, to be provided in the Test class.
     /// This to account for additional injections
     /// </summary>
-    protected abstract CommandHandler<TCommand> Handler { get; }
+    protected abstract ICommandHandler<TCommand> Handler { get; }
 
     /// <summary>
     /// A fake, in-memory event store.
