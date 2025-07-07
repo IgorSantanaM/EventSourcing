@@ -61,4 +61,9 @@ namespace BeerSender.Domain.Tests
             return _connectionString;
         }
     }
+    [CollectionDefinition("Marten collection")]
+    public class DatabaseCollection : ICollectionFixture<MartenFixture>
+    {
+
+    }
 }
