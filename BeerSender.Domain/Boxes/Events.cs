@@ -1,6 +1,11 @@
+using System.Text.Json.Serialization;
+
 namespace BeerSender.Domain.Boxes;
 
-public record BoxCreated(BoxCapacity Capacity);
+public record BoxCreated(
+    [property: JsonPropertyName("Capacity")]BoxCapacity BoxType,
+    string? FriendlyName,
+    ContainerType ContainerType = ContainerType.Bottle);
 
 public record BeerBottleAdded(BeerBottle Bottle);
 
