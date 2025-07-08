@@ -13,7 +13,7 @@ public class AddBeerBottleHandler()
 {
     public async Task Handle(IDocumentSession session, AddBeerBottle command)
     {
-        var box = await session.Events.AggregateStreamAsync<Box>(command.BoxId);
+        var box = await session.Events.FetchLatest<Box>(command.BoxId);
 
         if (box!.IsFull)
         {

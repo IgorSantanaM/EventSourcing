@@ -35,6 +35,10 @@ namespace BeerSender.Domain
                 opt.TypeInfoResolver = new CommandTypeResolver();
             });
 
+            options.Events.MetadataConfig.CorrelationIdEnabled = true;
+            options.Events.MetadataConfig.CausationIdEnabled = true;
+            options.Events.MetadataConfig.HeadersEnabled = true;
+
             options.Schema.For<UnsentBox>().Identity(u => u.BoxId);
             options.Schema.For<OpenBox>().Identity(u => u.BoxId);
             options.Schema.For<BottleInBoxes>().Identity(u => u.BottleId);
@@ -48,6 +52,8 @@ namespace BeerSender.Domain
             options.Projections.Add<UnsentBoxProjection>(ProjectionLifecycle.Async);
             options.Projections.Add<OpenBoxProjection>(ProjectionLifecycle.Async);
             options.Projections.Add<BottleiInBoxesProjection>(ProjectionLifecycle.Async);
+
+            options.Projections.Snapshot<Box>(Marten.Events.Projections.SnapshotLifecycle.Async);
         }
     }
 
