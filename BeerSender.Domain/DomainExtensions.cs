@@ -1,7 +1,9 @@
-﻿using BeerSender.Domain.Boxes.Commands;
+﻿using BeerSender.Domain.Boxes;
+using BeerSender.Domain.Boxes.Commands;
 using BeerSender.Domain.Projections;
 using JasperFx.Events.Projections;
 using Marten;
+using Marten.Services.Json.Transformations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -30,12 +32,24 @@ namespace BeerSender.Domain
 
             options.Schema.For<UnsentBox>().Identity(u => u.BoxId);
             options.Schema.For<OpenBox>().Identity(u => u.BoxId);
+
+            options.Events.Upcast<BoxCreatedUpcaster>();
+
         }
 
         public static void AddProjections(this StoreOptions options)
         {
             options.Projections.Add<UnsentBoxProjection>(ProjectionLifecycle.Async);
             options.Projections.Add<OpenBoxProjection>(ProjectionLifecycle.Async);
+        }
+    }
+
+    public class BoxCreatedUpcaster
+         : EventUpcaster<BoxCreated, BoxCreatedWithContainerType>
+    {
+        protected override BoxCreatedWithContainerType Upcast(BoxCreated oldEvent)
+        {
+            return new BoxCreatedWithContainerType(oldEvent.Capacity, string.Empty, ContainerType.Bottle);
         }
     }
 }
