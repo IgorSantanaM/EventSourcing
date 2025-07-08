@@ -2,19 +2,17 @@ using Marten;
 
 namespace BeerSender.Domain.Boxes.Commands;
 
-public record AddBeerBottle
+public record AddBeerBottle 
 (
     Guid BoxId,
     BeerBottle BeerBottle
-);
+) : ICommand;
 
-public class AddBeerBottleHandler(IDocumentStore store)
+public class AddBeerBottleHandler()
     : ICommandHandler<AddBeerBottle>
 {
-    public async Task Handle(AddBeerBottle command)
+    public async Task Handle(IDocumentSession session, AddBeerBottle command)
     {
-        await using var session = store.IdentitySession();
-
         var box = await session.Events.AggregateStreamAsync<Box>(command.BoxId);
 
         if (box!.IsFull)
@@ -25,7 +23,5 @@ public class AddBeerBottleHandler(IDocumentStore store)
         {
             session.Events.Append(command.BoxId, new BeerBottleAdded(command.BeerBottle));
         }
-
-        await session.SaveChangesAsync();
     }
 }

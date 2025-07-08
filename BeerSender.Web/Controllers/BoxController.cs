@@ -10,9 +10,9 @@ public class BoxController(CommandRouter router) : ControllerBase
 {
     [HttpPost]
     [Route("create")]
-    public IActionResult CreateBox([FromBody] CreateBox command)
+    public async Task<IActionResult> CreateBox([FromBody] CreateBox command)
     {
-        router.HandleCommand(command);
+        await router.HandleCommand(command);
 
         return Accepted();
     }

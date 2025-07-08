@@ -5,7 +5,7 @@ using Marten.Linq.Parsing.Operators;
 namespace BeerSender.Domain.Tests;
 
 [Collection("Marten collection")]
-public abstract class CommandHandlerTest<TCommand>
+public abstract class CommandHandlerTest<TCommand> where TCommand : class, ICommand
 {
     private readonly Dictionary<Guid, long> _streamVersion = new();
 
@@ -28,7 +28,7 @@ public abstract class CommandHandlerTest<TCommand>
         await Given(_aggregateId, events);
     }
 
-  
+
     protected async Task Given<TAggregate>(params object[] events) where TAggregate : class
     {
         await Given<TAggregate>(_aggregateId, events);
@@ -36,7 +36,7 @@ public abstract class CommandHandlerTest<TCommand>
 
     protected async Task Given<TAggregate>(Guid aggregateId, params object[] events) where TAggregate : class
     {
-        if(events.IsEmpty()) return;
+        if (events.IsEmpty()) return;
 
         await using var session = Store.LightweightSession();
         var stream = session.Events.StartStream<TAggregate>(aggregateId, events);
@@ -49,15 +49,19 @@ public abstract class CommandHandlerTest<TCommand>
 
     protected async Task When(TCommand command)
     {
-       await Handler.Handle(command);
+        await using var session = Store.IdentitySession();
+
+        await Handler.Handle(session, command);
+
+        await session.SaveChangesAsync();
     }
 
     protected async Task Then(params object[] expectedEvents)
     {
-       await Then(_aggregateId, expectedEvents);
+        await Then(_aggregateId, expectedEvents);
     }
 
-   
+
     protected async Task Then(Guid aggregateId, params object[] expectedEvents)
     {
 
@@ -65,7 +69,7 @@ public abstract class CommandHandlerTest<TCommand>
         var versin = _streamVersion.ContainsKey(aggregateId) ? _streamVersion[aggregateId] + 1 : 0L;
 
         var storedEvents = await session.Events.FetchStreamAsync(aggregateId, versin);
-        
+
         var actualEvents = storedEvents
             .OrderBy(e => e.Version)
             .Select(e => e.Data)

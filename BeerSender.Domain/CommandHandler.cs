@@ -1,7 +1,10 @@
-﻿namespace BeerSender.Domain
+﻿using Marten;
+
+namespace BeerSender.Domain
 {
-    public interface ICommandHandler<in TCommand>
+    public interface ICommandHandler<in TCommand> where TCommand : class, ICommand
     {
-        public Task Handle(TCommand command);
+        public Task Handle(IDocumentSession session, TCommand command);
     }
+    public interface ICommand;
 }

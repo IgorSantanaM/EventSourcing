@@ -3,6 +3,7 @@
 namespace BeerSender.Domain.Tests.Boxes
 {
     public abstract class BoxTest<TCommand>(MartenFixture fixture) : CommandHandlerTest<TCommand>(fixture)
+        where TCommand : class, ICommand
     {
         protected Guid Box_Id => _aggregateId;
 

@@ -1,5 +1,6 @@
 ﻿using BeerSender.Domain.Boxes;
 using BeerSender.Domain.Boxes.Commands;
+using BeerSender.Domain.JsonConfiguration;
 using BeerSender.Domain.Projections;
 using JasperFx.Events.Projections;
 using Marten;
@@ -7,6 +8,7 @@ using Marten.Services.Json.Transformations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,14 +30,17 @@ namespace BeerSender.Domain
         
         public static void ApplyDomainConfig(this StoreOptions options)
         {
-            options.UseSystemTextJsonForSerialization();
+            options.UseSystemTextJsonForSerialization(configure: opt =>
+            {
+                opt.TypeInfoResolver = new CommandTypeResolver();
+            });
 
             options.Schema.For<UnsentBox>().Identity(u => u.BoxId);
             options.Schema.For<OpenBox>().Identity(u => u.BoxId);
             options.Schema.For<BottleInBoxes>().Identity(u => u.BottleId);
+            options.Schema.For<LoggedCommand>().Identity(u => u.CommandId);
 
             options.Events.Upcast<BoxCreatedUpcaster>();
-
         }
 
         public static void AddProjections(this StoreOptions options)
