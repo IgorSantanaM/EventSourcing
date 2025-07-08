@@ -32,6 +32,7 @@ namespace BeerSender.Domain
 
             options.Schema.For<UnsentBox>().Identity(u => u.BoxId);
             options.Schema.For<OpenBox>().Identity(u => u.BoxId);
+            options.Schema.For<BottleInBoxes>().Identity(u => u.BottleId);
 
             options.Events.Upcast<BoxCreatedUpcaster>();
 
@@ -41,6 +42,7 @@ namespace BeerSender.Domain
         {
             options.Projections.Add<UnsentBoxProjection>(ProjectionLifecycle.Async);
             options.Projections.Add<OpenBoxProjection>(ProjectionLifecycle.Async);
+            options.Projections.Add<BottleiInBoxesProjection>(ProjectionLifecycle.Async);
         }
     }
 
