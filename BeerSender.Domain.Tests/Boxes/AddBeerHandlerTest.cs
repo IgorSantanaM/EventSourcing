@@ -6,7 +6,7 @@ namespace BeerSender.Domain.Tests.Boxes
 
     public class AddBeerHandlerTest(MartenFixture fixture) : BoxTest<AddBeerBottle>(fixture)
     {
-        protected override ICommandHandler<AddBeerBottle> Handler => new AddBeerBottleHandler(Store);
+        protected override ICommandHandler<AddBeerBottle> Handler => new AddBeerBottleHandler();
 
         [Fact]
         public async Task IfBoxIsEmpty_ThenBottleShouldBeAdded()

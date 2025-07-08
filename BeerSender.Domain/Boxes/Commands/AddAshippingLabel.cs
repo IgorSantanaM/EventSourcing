@@ -4,14 +4,13 @@ namespace BeerSender.Domain.Boxes.Commands;
 
 public record AddShippingLabel(
     Guid BoxId,
-    ShippingLabel Label);
+    ShippingLabel Label) : ICommand;
 
 public class AddShippingLabelHandler(IDocumentStore store)
     : ICommandHandler<AddShippingLabel>
 {
-    public async Task Handle(AddShippingLabel command)
+    public async Task Handle(IDocumentSession session, AddShippingLabel command)
     {
-        await using var session = store.IdentitySession();
         var box = session.Events.AggregateStreamAsync<Box>(command.BoxId);
 
         if (command.Label.IsValid())
@@ -23,8 +22,6 @@ public class AddShippingLabelHandler(IDocumentStore store)
             session.Events.Append(command.BoxId, new FailedToAddShippingLabel(
                 FailedToAddShippingLabel.FailReason.TrackingCodeInvalid));
         }
-
-        await session.SaveChangesAsync();
     }
 }
 
