@@ -20,7 +20,7 @@ namespace BeerSender.Domain.Projections
                 operations.Store(new OpenBox
                 {
                     BoxId = evt.StreamId,
-                    Capacity = evt.Data.Capacity.NumberOfSpots
+                    Capacity = evt.Data.BoxType.NumberOfSpots
                 });
             });
 

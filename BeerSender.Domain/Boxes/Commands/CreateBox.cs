@@ -4,7 +4,9 @@ namespace BeerSender.Domain.Boxes.Commands;
 
 public record CreateBox(
     Guid BoxId,
-    int DesiredNumberOfSpots 
+    int DesiredNumberOfSpots,
+    string FriendlyName,
+    ContainerType ContainerType
 );
 
 public class CreateBoxHandler(IDocumentStore store)
@@ -16,7 +18,7 @@ public class CreateBoxHandler(IDocumentStore store)
 
         var capacity = BoxCapacity.Create(command.DesiredNumberOfSpots);
 
-        session.Events.StartStream<Box>(command.BoxId, new BoxCreated(capacity));
+        session.Events.StartStream<Box>(command.BoxId, new BoxCreated(capacity, command.FriendlyName, command.ContainerType));
 
         await session.SaveChangesAsync();
     }

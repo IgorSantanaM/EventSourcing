@@ -9,7 +9,7 @@ namespace BeerSender.Domain.Tests.Boxes
         // Events
         protected BoxCreated Box_created_with_capacity(int capacity)
         {
-            return new BoxCreated(new BoxCapacity(capacity));
+            return new BoxCreated(new BoxCapacity(capacity), string.Empty, ContainerType.Bottle);
         }
 
         protected BeerBottleAdded Beer_bottle_added(BeerBottle bottle)
