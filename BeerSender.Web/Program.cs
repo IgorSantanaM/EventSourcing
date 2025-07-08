@@ -27,7 +27,7 @@ builder.Services.AddMarten(opt =>
         opt.FilterIncomingEventsOnStreamType(typeof(Box));
         opt.Options.BatchSize = 10;
     })
-    .AddAsyncDaemon(DaemonMode.Solo);
+    .AddAsyncDaemon(DaemonMode.Solo );
 
 var app = builder.Build();
 

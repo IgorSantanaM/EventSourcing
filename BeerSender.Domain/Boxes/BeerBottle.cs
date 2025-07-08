@@ -6,4 +6,7 @@ public record BeerBottle(
     string Name,
     double AlcoholPercentage,
     BeerType BeerType
-);
+)
+{
+    public string BottleId => $"[{Brewery}] {Name}";
+}
