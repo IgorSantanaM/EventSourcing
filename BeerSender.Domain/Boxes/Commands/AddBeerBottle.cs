@@ -13,15 +13,17 @@ public class AddBeerBottleHandler()
 {
     public async Task Handle(IDocumentSession session, AddBeerBottle command)
     {
-        var box = await session.Events.AggregateStreamAsync<Box>(command.BoxId);
+        var stream = await session.Events.FetchForWriting<Box>(command.BoxId);
+
+        var box = stream.Aggregate;
 
         if (box!.IsFull)
         {
-            session.Events.Append(command.BoxId, new FailedToAddBeerBottle(FailedToAddBeerBottle.FailReason.BoxWasFull));
+            stream.AppendOne(new FailedToAddBeerBottle(FailedToAddBeerBottle.FailReason.BoxWasFull));
         }
         else
         {
-            session.Events.Append(command.BoxId, new BeerBottleAdded(command.BeerBottle));
+            stream.AppendOne(new BeerBottleAdded(command.BeerBottle));
         }
     }
 }

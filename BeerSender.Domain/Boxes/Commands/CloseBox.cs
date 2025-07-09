@@ -13,15 +13,16 @@ public class CloseBoxHandler(IDocumentStore store)
 {
     public async Task Handle(IDocumentSession session, CloseBox command)
     {
-        var box = await session.Events.AggregateStreamAsync<Box>(command.BoxId);
+        var stream = await session.Events.FetchForWriting<Box>(command.BoxId);
+        var box = stream.Aggregate;
 
         if (box!.BeerBottles.Any())
         {
-            session.Events.Append(command.BoxId, new BoxClosed());
+            stream.AppendOne(new BoxClosed());
         }
         else
         {
-            session.Events.Append(command.BoxId, new FailedToCloseBox(FailedToCloseBox.FailReason.BoxWasEmpty));
+            stream.AppendOne(new FailedToCloseBox(FailedToCloseBox.FailReason.BoxWasEmpty));
         }
     }
 }

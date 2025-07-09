@@ -24,10 +24,21 @@ namespace BeerSender.Domain
 
             StoreCommand(session, command, commandId);
 
-            var handle = (Task)methodInfo?.Invoke(handler, [session, command]);
-            await handle;
+            ConfigureSession(session, commandId);
+
+            var handle = (Task)methodInfo?.Invoke(handler, [session, command])!;
+            await handle!;
 
             await session.SaveChangesAsync();
+        }
+
+        private void ConfigureSession(IDocumentSession session, Guid commandId)
+        {
+            session.CausationId = commandId.ToString();
+
+            session.CorrelationId = commandId.ToString();
+
+            session.SetHeader("TraceIdentifier", httpContextAccessor.HttpContext?.TraceIdentifier ?? string.Empty);
         }
 
         private void StoreCommand(IDocumentSession session, ICommand command, Guid commandId)
@@ -37,6 +48,8 @@ namespace BeerSender.Domain
                 httpContextAccessor.HttpContext.User.Identity?.Name,
                 DateTime.UtcNow,
                 command);
+
+            session.Insert(loggdCommand);
         }
     }
 
