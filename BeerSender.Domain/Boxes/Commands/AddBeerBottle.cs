@@ -19,11 +19,11 @@ public class AddBeerBottleHandler()
 
         if (box!.IsFull)
         {
-            session.Events.Append(command.BoxId, new FailedToAddBeerBottle(FailedToAddBeerBottle.FailReason.BoxWasFull));
+            stream.AppendOne(new FailedToAddBeerBottle(FailedToAddBeerBottle.FailReason.BoxWasFull));
         }
         else
         {
-            session.Events.Append(command.BoxId, new BeerBottleAdded(command.BeerBottle));
+            stream.AppendOne(new BeerBottleAdded(command.BeerBottle));
         }
     }
 }
